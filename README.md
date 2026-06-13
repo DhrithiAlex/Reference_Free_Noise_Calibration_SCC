@@ -16,7 +16,7 @@ The project has two main components:
 ### 1. Single-Qubit Calibration (`Single_Qubit_Channel/single_qubit_channel.py`)
 Self-consistent Pauli Transfer Matrix (PTM) reconstruction for a single qubit using six calibration states. Includes a D-criterion diagnostic to detect non-Markovian or state-dependent errors.
 
-### 2. Two-Qubit Superconducting Extension (``)
+### 2. Two-Qubit Superconducting Extension (`2_Qubit_Superconducting_Channel/2_qubit_channel.py`)
 Extends the framework to two coupled qubits with realistic superconducting parameters (T₁, T₂, readout error) and introduces a **locality residual** for detecting static ZZ crosstalk.
 
 Both implementations follow the same core philosophy from the thesis: reconstruct the noise channel from raw calibration statistics **without assuming a specific noise model**, then use scalar consistency diagnostics to validate simplifying assumptions.
