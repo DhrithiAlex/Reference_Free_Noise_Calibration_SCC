@@ -1,76 +1,67 @@
-# Reference-Free Noise Calibration for Single-Qubit Channels
+# Reference-Free Noise Calibration for Quantum Channels
 
-**Bridging continuous-variable quantum optics to gate-model quantum computing**
+**Bridging Continuous-Variable Quantum Optics to Gate-Model NISQ Hardware**
 
-A self-consistent Pauli Transfer Matrix (PTM) reconstruction framework for characterizing unknown noisy quantum channels — inspired by the master's thesis *"Balanced Homodyne Detection without a Coherent State Local Oscillator"*.
+A series of self-consistent noise characterization tools inspired by the master's thesis  
+*"Balanced Homodyne Detection without a Coherent State Local Oscillator"*.
 
 ---
 
-## 📌 Overview
+## 📌 Project Overview
 
-In quantum computing, every gate or idle period applies an **unknown noisy channel** to qubits. Traditional noise characterization often relies on perfectly trusted reference instruments or detailed noise models. This project demonstrates a **reference-free, self-consistent calibration method** that removes this assumption.
+Accurate noise characterization is critical for reliable quantum computing, yet traditional methods often depend on perfectly trusted reference instruments. This repository demonstrates **reference-free, self-consistent calibration techniques** that eliminate this assumption.
 
-By adapting techniques from continuous-variable quantum optics (specifically the thesis methodology), this simulation shows how to:
-- Reconstruct the noise channel’s effect **without assuming a specific noise model**.
-- Use only relative measurements across a small set of calibration states.
-- Detect when the noise cannot be described by a simple linear (Markovian) map.
+The project has two main components:
 
-This approach is directly applicable to **superconducting qubits**, **trapped-ion systems**, and other NISQ hardware.
+### 1. Single-Qubit Calibration (`qubit_noise_calibration.py`)
+Self-consistent Pauli Transfer Matrix (PTM) reconstruction for a single qubit using six calibration states. Includes a D-criterion diagnostic to detect non-Markovian or state-dependent errors.
+
+### 2. Two-Qubit Superconducting Extension (`two-qubit/qubit_noise_calibration_2q.py`)
+Extends the framework to two coupled qubits with realistic superconducting parameters (T₁, T₂, readout error) and introduces a **locality residual** for detecting static ZZ crosstalk.
+
+Both implementations follow the same core philosophy from the thesis: reconstruct the noise channel from raw calibration statistics **without assuming a specific noise model**, then use scalar consistency diagnostics to validate simplifying assumptions.
+
+---
 
 ## 🎯 Key Features
 
-- **Self-Consistent PTM Reconstruction**: Estimates the full 4×4 Pauli Transfer Matrix using linear inversion over six calibration states (`±X`, `±Y`, `±Z`).
-- **D-Criterion Diagnostic**: A powerful scalar metric that flags non-Markovian or state-dependent errors (e.g., crosstalk, calibration drift).
-- **Shot-Noise Realism**: Simulates finite-shot measurements, showing how performance scales with measurement budget.
-- **Comparative Analysis**: Benchmarks against ground-truth and naive "ideal instrument" assumptions.
-- **Non-Markovian Stress Test**: Demonstrates how the D-criterion dramatically increases when simple linear models fail.
+- **Self-Consistent PTM Reconstruction** — No trusted reference or assumed noise model
+- **D-Criterion Diagnostic** — Flags when a single linear map fails to explain the data
+- **Realistic Noise Models** — Lindblad dynamics + finite shot noise + readout errors
+- **Crosstalk Detection** (2Q) — Locality gap identifies non-local dynamics
+- **Measurement Scaling Studies** — Shows practical resource requirements
 
-## 🔬 Methodology
+---
 
-1. **True Noisy Channel** — Simulated via QuTiP Lindblad master equation (amplitude damping + dephasing).
-2. **Calibration States** — Six eigenstates of the Pauli operators (trusted preparation).
-3. **Measurement** — Projective Pauli measurements with binomial shot noise.
-4. **Reconstruction** — Linear least-squares to recover the Pauli Transfer Matrix.
-5. **Validation** — D-criterion residual + comparison with ground truth.
+## 📊 Visualizations
 
-## 📊 Results Highlights
+### Single-Qubit Results
+- **Figure 1**: Pauli Transfer Matrix Comparison (Ground Truth vs Reconstructed vs Naive)
+- **Figure 2**: Bloch Sphere — Ideal vs Noisy Calibration States
+- **Figure 3**: Reconstruction Error & D-Criterion vs Measurement Shots
+- **Figure 4**: D-Criterion as Non-Markovianity Diagnostic (~200× increase)
 
-- **Reconstruction Accuracy**: Self-consistent method achieves ~8× lower error than assuming no noise.
-- **Measurement Efficiency**: Useful calibration achieved with only a few hundred shots per state.
-- **Diagnostic Power**: D-criterion increases by **~200×** when state-dependent (non-Markovian) errors are present.
-- Visualizations include PTM heatmaps, Bloch sphere trajectories, scaling studies, and diagnostic bar plots.
+### Two-Qubit Superconducting Results
+- **Figure 5**: 16×16 PTM Comparison (Full vs Reconstructed vs Local)
+- **Figure 6**: Crosstalk Fingerprint (PTM Residual: Full − Local)
+- **Figure 7**: Locality Gap vs ZZ Coupling Strength (Crosstalk Sensor)
 
-## 🚀 Real-World Advantages in Quantum Computing
+See [`figures/FIGURES.md`](figures/FIGURES.md) for detailed descriptions of all figures.
 
-This reference-free calibration technique offers several **practical benefits** for NISQ-era quantum computing:
+---
 
-### 1. **Reduced Calibration Overhead**
-- Eliminates the need for perfectly characterized reference states or instruments.
-- Enables **frequent, lightweight recalibration** during long computations.
+## 🚀 Real-World Impact
 
-### 2. **Improved Error Mitigation**
-- Provides a calibrated Pauli Transfer Matrix that can be directly used in:
-  - Zero-Noise Extrapolation (ZNE)
-  - Probabilistic Error Cancellation
-  - Customized error models for VQE, QAOA, or other algorithms.
+- Enables **lightweight, frequent recalibration** on NISQ hardware without perfect references
+- Provides calibrated PTMs for improved error mitigation (ZNE, PEC, etc.)
+- Detects crosstalk and non-Markovian effects that standard methods might miss
+- Directly applicable to superconducting (fixed-frequency transmons) and trapped-ion platforms
+- Serves as a strong foundation for multi-qubit crosstalk mapping and hardware-aware algorithm optimization
 
-### 3. **Better Detection of Complex Noise**
-- The D-criterion acts as an early-warning system for:
-  - Crosstalk
-  - State-preparation errors
-  - Non-Markovian effects (e.g., from environmental memory or drifting control parameters)
-- Helps decide when a simple noise model is no longer sufficient.
+---
 
-### 4. **Hardware Agnostic & Scalable**
-- Works with superconducting, trapped-ion, or neutral-atom platforms.
-- Foundation for multi-qubit extensions (crosstalk mapping).
-- Can be integrated with Qiskit, Cirq, or other frameworks for real-hardware deployment.
+## 🛠️ Installation & Running
 
-### 5. **Efficiency Gains**
-By using self-consistent reconstruction instead of assuming ideal behavior, circuits can be optimized with more accurate noise-aware compilation, leading to **higher fidelity** and **longer effective circuit depth** on noisy hardware.
-
-## 🛠️ Installation & Usage
-
-### Requirements
+### Prerequisites
 ```bash
 pip install qutip numpy matplotlib
