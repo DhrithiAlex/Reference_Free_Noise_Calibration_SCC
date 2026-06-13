@@ -1,0 +1,6 @@
+## 📊 Key Visualizations
+
+- **Figure 1**: Pauli Transfer Matrix Comparison — shows how accurately the self-consistent method recovers the true noise channel.
+- **Figure 2**: Bloch Sphere Visualization — geometric view of how noise contracts the calibration states.
+- **Figure 3**: Shot Scaling Study — demonstrates efficiency and scaling behavior with measurement resources.
+- **Figure 4**: D-Criterion Diagnostic — illustrates the method’s ability to detect non-Markovian noise.
